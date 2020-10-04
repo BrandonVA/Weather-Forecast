@@ -10,7 +10,25 @@
 <body>
     <div class="container">
         <div class="row">
-            <div class="col-md-4"></div>
+            <div class="col-md-4">
+                <div class="search-container my-3">
+                    <form action="submit">
+                        <label for="city-input">Enter a City</label> 
+                        <br>
+                        <input type="text" name="city-input" id="city-input">
+                        <button class="btn btn-primary" id="searchCity">Go</button>
+                    </form>                   
+                </div>
+                <div class="city-container m">
+                    <ul class="list-group">
+                        <li class="list-group-item active">Current Display</li>
+                        <li class="list-group-item">San Fran</li>
+                        <li class="list-group-item">Bangkok</li>
+                        <li class="list-group-item">Seattle</li>
+                        <li class="list-group-item">Granite Falls</li>
+                      </ul>
+                </div>
+            </div>
             <div class="col-md-8"></div>
         </div>
     </div>
