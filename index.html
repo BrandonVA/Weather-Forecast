@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="Assests\style.css">
 </head>
 <body>
-    <div class="container">
+    <div class="container-fluid">
         <div class="row">
             <div class="col-md-4">
                 <div class="search-container my-3">
@@ -21,32 +21,30 @@
                 </div>
                 <div class="city-container m">
                     <ul class="list-group">
-                        <!-- <li class="list-group-item active">Current Display</li>
-                        <li class="list-group-item">San Fran</li>
-                        <li class="list-group-item">Bangkok</li>
-                        <li class="list-group-item">Seattle</li>
-                        <li class="list-group-item">Granite Falls</li> -->
                       </ul>
                       <button id="testMe" class="btn btn-danger">TEST ME</button>
                 </div>
             </div>
             <div class="col-md-8">
                 <div class="current-weather">
-                    <h2 id="current-city">Your City</h2>
-                    <p id="current-temp">rando temp</p>
-                    <p id="current-humidity">rando humidity</p>
-                    <p id="current-wind">rando wind</p>
-                    <p id="current-uv">rando uv</p>
+                    <div class="city">
+                        <h2 id="current-city" class="d-inline">Your City</h2>
+                        <img id="current-city-icon" src="#" alt="weather icon">
+                    </div>
+                    <p>Temp: <span id="current-temp"></span></p>
+                    <p>Humidity: <span id="current-humidity"></span></p>
+                    <p>Wind: <span id="current-wind"></span></p>
+                    <p>UV Index: <span id="current-uv"></span></p>
                 </div>
                 <div class="row">
                     <div class="col-12">
                         <h2 id="forecast">5 Day Forecast</h2>
                     </div>
-                    <div class="col-sm-2 col-sm-offset-1">weather day 0</div>
-                    <div class="col-sm-2">Weather day 1</div>
-                    <div class="col-sm-2">Weather day 2</div>
-                    <div class="col-sm-2">Weather day 3</div>
-                    <div class="col-sm-2">Weather day 4</div>
+                    <div class="col-sm-2 col-sm-offset-1" data-day="0">weather day 0</div>
+                    <div class="col-sm-2" data-day="1">Weather day 1</div>
+                    <div class="col-sm-2" data-day="2">Weather day 2</div>
+                    <div class="col-sm-2" data-day="3">Weather day 3</div>
+                    <div class="col-sm-2" data-day="3">Weather day 4</div>
 
                 </div>
             </div>
