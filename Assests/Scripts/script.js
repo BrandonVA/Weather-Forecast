@@ -131,7 +131,7 @@ const getWeather = city => {
         newCityData.push( {
             currentDay: {
             name: response.city.name,
-            date: response.list[0].dt_txt,
+            date: moment().format('L'),
             icon: response.list[0].weather[0].icon,
             temp: response.list[0].main.temp,
             humidity: response.list[0].main.humidity,
@@ -141,31 +141,31 @@ const getWeather = city => {
             followingDays: [
 
                 {
-                    date: response.list[4].dt_txt,
+                    date: moment().add(1, 'days').format('L'),
                     icon: response.list[4].weather[0].icon,
                     temp: response.list[4].main.temp,
                     humidity: response.list[4].main.humidity
                 },
                 {
-                    date: response.list[13].dt_txt,
+                    date: moment().add(2, 'days').format('L'),
                     icon: response.list[13].weather[0].icon,
                     temp: response.list[13].main.temp,
                     humidity: response.list[13].main.humidity
                 },
                 {
-                    date: response.list[21].dt_txt,
+                    date: moment().add(3, 'days').format('L'),
                     icon: response.list[21].weather[0].icon,
                     temp: response.list[21].main.temp,
                     humidity: response.list[21].main.humidity
                 },
                 {
-                    date: response.list[29].dt_txt,
+                    date: moment().add(4, 'days').format('L'),
                     icon: response.list[29].weather[0].icon,
                     temp: response.list[29].main.temp,
                     humidity: response.list[29].main.humidity
                 },
                 {
-                    date: response.list[37].dt_txt,
+                    date: moment().add(5, 'days').format('L'),
                     icon: response.list[37].weather[0].icon,
                     temp: response.list[37].main.temp,
                     humidity: response.list[37].main.humidity
@@ -227,11 +227,11 @@ $('#searchCity').on('click', creatCityItem)
 
 
 $('#testMe').on('click',function() {
-    let currentCityEl = $()
 
 
 
-
+    let oncallAPI = `https://api.openweathermap.org/data/2.5/onecall?lat={lat}&lon={lon}&exclude={part}&appid={API key}`
+    
 
 
     let testDisplayWeather = localStorage.getItem('displayWeather');
@@ -239,31 +239,48 @@ $('#testMe').on('click',function() {
     console.log(testDisplayWeather);
 
     let date = testDisplayWeather[1].currentDay.date
-    let myDate = moment().format('L'); 
-    let dayOne = moment().add(1, 'days').format('L'); //.calendar();
-    let daytwo = moment().add(2, 'days').calendar();  
-    let daythree = moment().add(3, 'days').calendar();  
-    let dayfour = moment().add(4, 'days').calendar();  
-    let dayfive = moment().add(5, 'days').calendar();    
+    let currentDayIcon = testDisplayWeather[1].currentDay.icon;
+    console.log(currentDayIcon);
 
+    let iconUrl = `http://openweathermap.org/img/wn/${ currentDayIcon }@2x.png`
     
-     console.log(date);
-     console.log(myDate);
-     console.log(dayOne);
-     console.log(daytwo);
-     console.log(daythree);
-     console.log(dayfour);
-     console.log(dayfive);
+    let iconImgEl = $('<img>').attr('src', iconUrl).addClass('d-inline');
 
 
 
 
 
-    $('#current-city').text(testDisplayWeather[1].currentDay.name + ' ' + myDate);
+
+
+
+    $('#current-city').text(testDisplayWeather[1].currentDay.name + ' ' + date);
+    $('#current-city-icon').attr('src', iconUrl);
     $('#current-temp').text(testDisplayWeather[1].currentDay.temp);
     $('#current-humidity').text(testDisplayWeather[1].currentDay.humidity);
     $('#current-wind').text(testDisplayWeather[1].currentDay.windSpeed);
     $('#current-uv').text(testDisplayWeather[1].currentDay.uvIndex);
+
+    testDisplayWeather[1].followingDays.forEach((day,index) => {
+        let divEl = $(`div[data-day="${index}"]`);
+        let followingIconUrl = `http://openweathermap.org/img/wn/${ day.icon }@2x.png`
+
+        let h5El = $('<h5>').text(day.date);
+        let followingDaysIconEl = $('<img>').attr({
+            src: followingIconUrl,
+            alt: 'weather icon'
+        });
+        let paragraphTempEl = $('<p>').text(`Temp: ${day.temp}`);
+        let paragraphHumidityEl = $('<p>').text(`Humidity: ${day.humidity}`);
+
+        divEl.empty();
+        divEl.append(h5El,followingDaysIconEl,paragraphTempEl,paragraphHumidityEl)
+        
+        
+        
+        console.log(day);
+        console.log(index);
+        // console.log(testEl);
+    })
     
     
     
