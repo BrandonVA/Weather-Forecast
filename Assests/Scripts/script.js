@@ -1,8 +1,24 @@
 $(document).ready(function() {
     console.log('jquery!!!')
 
-    if (localStorage.getItem('citiesArray') === null ){
+    if (localStorage.getItem('citiesArray') === null ) {
         localStorage.setItem('citiesArray', '[]');
+    }
+
+    if (localStorage.getItem('displayWeather') === null ) {
+        localStorage.setItem('displayWeather', "{}");
+    }
+
+
+
+    const addCities = () => {
+        let listOfCities = localStorage.getItem('citiesArray');
+        listOfCities = JSON.parse(listOfCities);
+        listOfCities.forEach(city => {
+            let listItemEl = $('<li>');
+            listItemEl.addClass('list-group-item').text(city[0])
+            $('ul').append(listItemEl);
+        })
     }
     
 
@@ -11,11 +27,36 @@ $(document).ready(function() {
 //------Getting data from list items
 const addActiveCity = (event) => {
     event.preventDefault();
+
+
     let testThis = event.target.innerText
     console.log(testThis);
+
+    getWeather(testThis);
+
     let testLocalArray = localStorage.getItem('citiesArray');
     testLocalArray = JSON.parse(testLocalArray);
-    console.log(testLocalArray);
+
+    let weatherToDisply = localStorage.getItem('displayWeather');
+    weatherToDisply = JSON.parse(weatherToDisply);
+
+    testLocalArray.forEach((item) => {
+
+        if (testThis === item[0]) {
+            alert('this will work')
+            weatherToDisply = item;
+        }
+    })
+
+    weatherToDisply = JSON.stringify(weatherToDisply);
+    localStorage.setItem('displayWeather', weatherToDisply);
+
+
+    // console.log(testLocalArray);
+
+
+
+
 }
 
 
@@ -83,6 +124,7 @@ const getWeather = city => {
         console.log(response);
         cityLat = response.city.coord.lat;
         cityLon = response.city.coord.lon;
+        
 
 
 
@@ -154,8 +196,18 @@ const getWeather = city => {
             let old_citiesArray = localStorage.getItem('citiesArray');
             old_citiesArray = JSON.parse(old_citiesArray);
 
-          
-            old_citiesArray.push(newCityData)
+            let checkArray = true;
+
+            old_citiesArray.forEach(listedCity => {
+                if (listedCity[0]  === city) {
+                    old_citiesArray[listedCity[0]] = newCityData
+                    checkArray = false;
+                }
+            })
+
+            if (checkArray) {
+                old_citiesArray.push(newCityData)
+            }
 
             let new_citiesArray = old_citiesArray;
 
@@ -168,10 +220,54 @@ const getWeather = city => {
 
 }
 
-
+addCities();
 
 $('ul').on('click', 'li', addActiveCity)
 $('#searchCity').on('click', creatCityItem)
+
+
+$('#testMe').on('click',function() {
+    let currentCityEl = $()
+
+
+
+
+
+
+    let testDisplayWeather = localStorage.getItem('displayWeather');
+    testDisplayWeather = JSON.parse(testDisplayWeather);
+    console.log(testDisplayWeather);
+
+    let date = testDisplayWeather[1].currentDay.date
+    let myDate = moment().format('L'); 
+    let dayOne = moment().add(1, 'days').format('L'); //.calendar();
+    let daytwo = moment().add(2, 'days').calendar();  
+    let daythree = moment().add(3, 'days').calendar();  
+    let dayfour = moment().add(4, 'days').calendar();  
+    let dayfive = moment().add(5, 'days').calendar();    
+
+    
+     console.log(date);
+     console.log(myDate);
+     console.log(dayOne);
+     console.log(daytwo);
+     console.log(daythree);
+     console.log(dayfour);
+     console.log(dayfive);
+
+
+
+
+
+    $('#current-city').text(testDisplayWeather[1].currentDay.name + ' ' + myDate);
+    $('#current-temp').text(testDisplayWeather[1].currentDay.temp);
+    $('#current-humidity').text(testDisplayWeather[1].currentDay.humidity);
+    $('#current-wind').text(testDisplayWeather[1].currentDay.windSpeed);
+    $('#current-uv').text(testDisplayWeather[1].currentDay.uvIndex);
+    
+    
+    
+})
 
 
 
@@ -194,3 +290,5 @@ $('#searchCity').on('click', creatCityItem)
 
 
 })
+
+
