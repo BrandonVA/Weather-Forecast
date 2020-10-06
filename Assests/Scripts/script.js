@@ -1,6 +1,8 @@
 $(document).ready(function() {
     console.log('jquery!!!')
 
+
+
     if (localStorage.getItem('citiesArray') === null ) {
         localStorage.setItem('citiesArray', '[]');
     }
@@ -10,13 +12,16 @@ $(document).ready(function() {
     }
 
 
-
+    // Adding all cities stored on the local storage cities araray 
     const addCities = () => {
+
         let listOfCities = localStorage.getItem('citiesArray');
         listOfCities = JSON.parse(listOfCities);
+
+        // loops through array gets an li for each one.
         listOfCities.forEach(city => {
             let listItemEl = $('<li>');
-            listItemEl.addClass('list-group-item').text(city[0])
+            listItemEl.addClass('list-group-item').text(city)
             $('ul').append(listItemEl);
         })
     }
@@ -31,23 +36,29 @@ const addActiveCity = (event) => {
 
     let testThis = event.target.innerText
     console.log(testThis);
-
+    ////////////////////////////////////////------------make capitalized slice split toUppercase...
     getWeather(testThis);
 
+    // getting value of the array of cities stored
     let testLocalArray = localStorage.getItem('citiesArray');
     testLocalArray = JSON.parse(testLocalArray);
 
+    // setting the display weather local object to the clicked on city.
     let weatherToDisply = localStorage.getItem('displayWeather');
     weatherToDisply = JSON.parse(weatherToDisply);
 
+
+    // looping through the array and checking the first index is the same as the stored city
     testLocalArray.forEach((item) => {
 
+        // if true setting the display weather local object to that item
         if (testThis === item[0]) {
             alert('this will work')
             weatherToDisply = item;
         }
     })
 
+    // Updating the local storage object with the stringified value of the cities object
     weatherToDisply = JSON.stringify(weatherToDisply);
     localStorage.setItem('displayWeather', weatherToDisply);
 
@@ -59,33 +70,47 @@ const addActiveCity = (event) => {
 
 }
 
+const capitalizeCity = city => {
+    city = city.split(' ');
+    let cityCaped = [];
+
+    city.forEach(item => {
+          item = item[0].toUpperCase() + item.slice(1);
+         cityCaped.push(item)
+    }) 
+
+    cityCaped = cityCaped.join(' ');
+    return cityCaped;
+}
+// capitalizeCity('lake stevens')
 
 ///////////////////////////////////////////////////////////////////////////////
 // ----Adding new citys
 const creatCityItem = (event) => {
     event.preventDefault();
 
+
+    // creating vars for the element to create and its value
     let newCityIemEl = $('<li>');
     let newCityText = $('#city-input').val();
+    ////////////////////////////////////////------------make capitalized slice split toUppercase...
+    newCityText = capitalizeCity(newCityText)
 
+    // storing array of cities local storage array
     let testCity = localStorage.getItem('citiesArray')
     testCity = JSON.parse( testCity );
     
-    // testCity.forEach(element => {
-    //     console.log(testCity[element]);
-    //     console.log(newCityText);
-    //     if (element !== newCityText) {
 
- 
-        
-            
-    //     }
-    // });
+
+    // creating a test var 
     let testCase = true;
 
+    //  if the city you inputed already exists dont add it to the list
+
+
     for (let i = 0; i < testCity.length; i++) {
-        console.log(testCity[i][0]);
-        if (newCityText === testCity[i][0]) {
+        console.log(testCity[i]);
+        if (newCityText === testCity[i]) {
             alert('please select a new city this city is already active');
             testCase = false;
         } else {
@@ -95,6 +120,7 @@ const creatCityItem = (event) => {
 
 
     }
+    // if test case remains true create a new city element and get the weather for that city
     if (testCase) {
         newCityIemEl.addClass('list-group-item')
         .text(newCityText);
@@ -108,114 +134,126 @@ const creatCityItem = (event) => {
 const getWeather = city => {
     console.log(city);
 
+
+    // creating vars to store all the data needed for an api call
     let apiCity = `q=${city}`
     const url = 'https://api.openweathermap.org/data/2.5/forecast?' 
     const apiKey = '&appid=d8730e114dc8b472804de4c9ab0ed1da';
     let endpoint = `${url}${apiCity}${apiKey}&units=imperial`;
 
-    let newCityData = [city];
+    let newCityData = {};
     let cityLat;
     let cityLon;
+    let cityName = '?';
 
+
+    // making the api call 
     $.ajax({
         url: endpoint,
         method: 'GET'
     }).then(function(response){
         console.log(response);
+        cityName = response.city.name
+
+        // storing lat and long for uv index call
         cityLat = response.city.coord.lat;
         cityLon = response.city.coord.lon;
-        
-
-
-
-        newCityData.push( {
-            currentDay: {
-            name: response.city.name,
-            date: moment().format('L'),
-            icon: response.list[0].weather[0].icon,
-            temp: response.list[0].main.temp,
-            humidity: response.list[0].main.humidity,
-            windSpeed: response.list[0].wind.speed,
-
-            },
-            followingDays: [
-
-                {
-                    date: moment().add(1, 'days').format('L'),
-                    icon: response.list[4].weather[0].icon,
-                    temp: response.list[4].main.temp,
-                    humidity: response.list[4].main.humidity
-                },
-                {
-                    date: moment().add(2, 'days').format('L'),
-                    icon: response.list[13].weather[0].icon,
-                    temp: response.list[13].main.temp,
-                    humidity: response.list[13].main.humidity
-                },
-                {
-                    date: moment().add(3, 'days').format('L'),
-                    icon: response.list[21].weather[0].icon,
-                    temp: response.list[21].main.temp,
-                    humidity: response.list[21].main.humidity
-                },
-                {
-                    date: moment().add(4, 'days').format('L'),
-                    icon: response.list[29].weather[0].icon,
-                    temp: response.list[29].main.temp,
-                    humidity: response.list[29].main.humidity
-                },
-                {
-                    date: moment().add(5, 'days').format('L'),
-                    icon: response.list[37].weather[0].icon,
-                    temp: response.list[37].main.temp,
-                    humidity: response.list[37].main.humidity
-                }
-            ]
-        })
-        
-
-
-
-
-
-
 
     })
+    // when the ajax call is complete 
     .then( () => {
         console.log(cityLat, cityLon);
-
-        let uvUrl = `https://api.openweathermap.org/data/2.5/uvi?lat=${cityLat}&lon=${cityLon}${apiKey}`
+        //////////////////////////////////////////////////////////////////////////////////////////////////////
+        let exclued = 'minutely,hourly,alerts'
+        let secondApi = 'd8730e114dc8b472804de4c9ab0ed1da'
+    
+        let oneCallAPI = `https://api.openweathermap.org/data/2.5/onecall?lat=${cityLat}&lon=${cityLon}&exclude=${exclued}&appid=${secondApi}`
         $.ajax({
-            url: uvUrl,
+            url: oneCallAPI,
             method: 'GET'
-        }).then(function(nestedResponse){
+        }).then(oneCallresponse => {
+            console.log(oneCallresponse);
 
-            newCityData[1].currentDay.uvIndex = nestedResponse.value
-            console.log('====================final LOG =====================');
+                    // pushing the new citys weather into the newcity data value
 
-            let old_citiesArray = localStorage.getItem('citiesArray');
-            old_citiesArray = JSON.parse(old_citiesArray);
 
-            let checkArray = true;
+                    //Math.round(((oneCallresponse.daily[1].temp.day-273.15)*1.8 )+32),
+            newCityData = {
+                currentDay: {
+                name: cityName,
+                date: moment().format('L'),
+                icon: oneCallresponse.current.weather[0].icon,
+                temp: Math.round(((oneCallresponse.current.temp-273.15)*1.8 )+32),
+                humidity: oneCallresponse.current.humidity,
+                windSpeed: oneCallresponse.current.wind_speed,
+                uvIndex: oneCallresponse.current.uvi
 
-            old_citiesArray.forEach(listedCity => {
-                if (listedCity[0]  === city) {
-                    old_citiesArray[listedCity[0]] = newCityData
-                    checkArray = false;
-                }
-            })
+                },
+                followingDays: [
 
-            if (checkArray) {
-                old_citiesArray.push(newCityData)
+                    {
+                        date: moment().add(1, 'days').format('L'),
+                        icon: oneCallresponse.daily[0].weather[0].icon,
+                        temp: Math.round(((oneCallresponse.daily[0].temp.day-273.15)*1.8 )+32),
+                        humidity: oneCallresponse.daily[0].humidity
+                    },
+                    {
+                        date: moment().add(2, 'days').format('L'),
+                        icon: oneCallresponse.daily[1].weather[0].icon,
+                        temp: Math.round(((oneCallresponse.daily[1].temp.day-273.15)*1.8 )+32),
+                        humidity: oneCallresponse.daily[1].humidity
+                    },
+                    {
+                        date: moment().add(3, 'days').format('L'),
+                        icon: oneCallresponse.daily[2].weather[0].icon,
+                        temp: Math.round(((oneCallresponse.daily[2].temp.day-273.15)*1.8 )+32),
+                        humidity: oneCallresponse.daily[2].humidity
+                    },
+                    {
+                        date: moment().add(4, 'days').format('L'),
+                        icon: oneCallresponse.daily[3].weather[0].icon,
+                        temp: Math.round(((oneCallresponse.daily[3].temp.day-273.15)*1.8 )+32),
+                        humidity: oneCallresponse.daily[3].humidity
+                    },
+                    {
+                        date: moment().add(5, 'days').format('L'),
+                        icon: oneCallresponse.daily[4].weather[0].icon,
+                        temp: Math.round(((oneCallresponse.daily[4].temp.day-273.15)*1.8 )+32),
+                        humidity: oneCallresponse.daily[4].humidity
+                    }
+                ]
             }
 
-            let new_citiesArray = old_citiesArray;
+            console.log('----------new obj------------',newCityData);
+        }).then(()=> {
+            // setting the display weather local object to the clicked on city.
+            let currentWeatherObj = localStorage.getItem('displayWeather');
+            currentWeatherObj = JSON.parse(currentWeatherObj);
+            currentWeatherObj = newCityData;
+            localStorage.setItem('displayWeather', JSON.stringify(currentWeatherObj))
 
-            new_citiesArray = JSON.stringify(new_citiesArray);
-            localStorage.setItem('citiesArray', new_citiesArray);
-    
-    
+            console.log(cityName);
+
+            let old_listOfCities = JSON.parse(localStorage.getItem('citiesArray'))
+
+            let checkCity = true;
+
+            old_listOfCities.forEach(index => {
+                if (index === cityName) {
+                    checkCity = false;
+                }
+            })
+            if (checkCity) {
+                old_listOfCities.push(cityName)
+            }
+
+            localStorage.setItem('citiesArray', JSON.stringify(old_listOfCities) )
+            
+
+
+
         })
+        //------------------------------------------------------------------------------------------------
     })
 
 }
@@ -228,18 +266,18 @@ $('#searchCity').on('click', creatCityItem)
 
 $('#testMe').on('click',function() {
 
+// function to handle updating the dom with the currently active city storeage in the dispay weather local storage object
 
-
-    let oncallAPI = `https://api.openweathermap.org/data/2.5/onecall?lat={lat}&lon={lon}&exclude={part}&appid={API key}`
     
+
 
 
     let testDisplayWeather = localStorage.getItem('displayWeather');
     testDisplayWeather = JSON.parse(testDisplayWeather);
     console.log(testDisplayWeather);
 
-    let date = testDisplayWeather[1].currentDay.date
-    let currentDayIcon = testDisplayWeather[1].currentDay.icon;
+    let date = testDisplayWeather.currentDay.date
+    let currentDayIcon = testDisplayWeather.currentDay.icon;
     console.log(currentDayIcon);
 
     let iconUrl = `http://openweathermap.org/img/wn/${ currentDayIcon }@2x.png`
@@ -253,14 +291,14 @@ $('#testMe').on('click',function() {
 
 
 
-    $('#current-city').text(testDisplayWeather[1].currentDay.name + ' ' + date);
+    $('#current-city').text(testDisplayWeather.currentDay.name + ' ' + date);
     $('#current-city-icon').attr('src', iconUrl);
-    $('#current-temp').text(testDisplayWeather[1].currentDay.temp);
-    $('#current-humidity').text(testDisplayWeather[1].currentDay.humidity);
-    $('#current-wind').text(testDisplayWeather[1].currentDay.windSpeed);
-    $('#current-uv').text(testDisplayWeather[1].currentDay.uvIndex);
+    $('#current-temp').text(testDisplayWeather.currentDay.temp);
+    $('#current-humidity').text(testDisplayWeather.currentDay.humidity);
+    $('#current-wind').text(testDisplayWeather.currentDay.windSpeed);
+    $('#current-uv').text(testDisplayWeather.currentDay.uvIndex);
 
-    testDisplayWeather[1].followingDays.forEach((day,index) => {
+    testDisplayWeather.followingDays.forEach((day,index) => {
         let divEl = $(`div[data-day="${index}"]`);
         let followingIconUrl = `http://openweathermap.org/img/wn/${ day.icon }@2x.png`
 
@@ -307,5 +345,3 @@ $('#testMe').on('click',function() {
 
 
 })
-
-
