@@ -71,7 +71,8 @@ const addActiveCity = (event) => {
 }
 
 const capitalizeCity = city => {
-    city = city.split(' ');
+    
+    city = city.trim().split(' ');
     let cityCaped = [];
 
     city.forEach(item => {
