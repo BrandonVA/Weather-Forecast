@@ -4,5 +4,39 @@ html{
 body{
     height: 100%;
     min-height: 100%;
-    background-color: antiquewhite;
+    /* background-color: antiquewhite; */
+}
+
+div[data-day] {
+    background-color: rgb(44, 143, 255);
+}
+
+#testMe {
+    display: none;
+}
+
+
+@media (max-width: 767.98px) { 
+    #testMe {
+        margin: 10px auto;
+        display: block;
+        /* margin-left: auto;
+        margin-right: auto; */
+    }
+    div[data-day] {
+        padding-left: 5px;
+        padding-right: 5px;
+        margin-left: 5px!important;
+        margin-right: 5px!important;
+    }
+    div[data-day] h5 {
+        font-size: 1rem;
+    }
+    div[data-day] img {
+        width: 50px;
+        height: auto;
+    }
+    #current-city-icon {
+        display: block;
+    }
 }

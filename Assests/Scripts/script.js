@@ -3,13 +3,7 @@ $(document).ready(function() {
 
 
 
-    if (localStorage.getItem('citiesArray') === null ) {
-        localStorage.setItem('citiesArray', '[]');
-    }
 
-    if (localStorage.getItem('displayWeather') === null ) {
-        localStorage.setItem('displayWeather', "{}");
-    }
 
 
     // Adding all cities stored on the local storage cities araray 
@@ -65,10 +59,15 @@ const addActiveCity = (event) => {
 
     // console.log(testLocalArray);
 
-
+    
 
 
 }
+
+
+
+
+
 
 const capitalizeCity = city => {
     
@@ -128,6 +127,7 @@ const creatCityItem = (event) => {
         $('.list-group').append(newCityIemEl);
         getWeather(newCityText);
     }
+    
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -193,31 +193,31 @@ const getWeather = city => {
                 followingDays: [
 
                     {
-                        date: moment().add(1, 'days').format('L'),
+                        date: moment().add(1, 'days').format('MMM Do YY'),
                         icon: oneCallresponse.daily[0].weather[0].icon,
                         temp: Math.round(((oneCallresponse.daily[0].temp.day-273.15)*1.8 )+32),
                         humidity: oneCallresponse.daily[0].humidity
                     },
                     {
-                        date: moment().add(2, 'days').format('L'),
+                        date: moment().add(2, 'days').format('MMM Do YY'),
                         icon: oneCallresponse.daily[1].weather[0].icon,
                         temp: Math.round(((oneCallresponse.daily[1].temp.day-273.15)*1.8 )+32),
                         humidity: oneCallresponse.daily[1].humidity
                     },
                     {
-                        date: moment().add(3, 'days').format('L'),
+                        date: moment().add(3, 'days').format('MMM Do YY'),
                         icon: oneCallresponse.daily[2].weather[0].icon,
                         temp: Math.round(((oneCallresponse.daily[2].temp.day-273.15)*1.8 )+32),
                         humidity: oneCallresponse.daily[2].humidity
                     },
                     {
-                        date: moment().add(4, 'days').format('L'),
+                        date: moment().add(4, 'days').format('MMM Do YY'),
                         icon: oneCallresponse.daily[3].weather[0].icon,
                         temp: Math.round(((oneCallresponse.daily[3].temp.day-273.15)*1.8 )+32),
                         humidity: oneCallresponse.daily[3].humidity
                     },
                     {
-                        date: moment().add(5, 'days').format('L'),
+                        date: moment().add(5, 'days').format('MMM Do YY'),
                         icon: oneCallresponse.daily[4].weather[0].icon,
                         temp: Math.round(((oneCallresponse.daily[4].temp.day-273.15)*1.8 )+32),
                         humidity: oneCallresponse.daily[4].humidity
@@ -252,12 +252,63 @@ const getWeather = city => {
             
 
 
-
+            updateWeather();
         })
         //------------------------------------------------------------------------------------------------
     })
 
 }
+const updateWeather = () => {
+
+    // function to handle updating the dom with the currently active city storeage in the dispay weather local storage object
+    
+        
+    
+    
+    
+        let testDisplayWeather = localStorage.getItem('displayWeather');
+        testDisplayWeather = JSON.parse(testDisplayWeather);
+        console.log(testDisplayWeather);
+    
+        let date = testDisplayWeather.currentDay.date
+        let currentDayIcon = testDisplayWeather.currentDay.icon;
+        console.log(currentDayIcon);
+    
+        let iconUrl = `http://openweathermap.org/img/wn/${ currentDayIcon }@2x.png`
+        
+        
+        $('#current-city').text(testDisplayWeather.currentDay.name + ' ' + date);
+        $('#current-city-icon').attr('src', iconUrl);
+        $('#current-temp').text(testDisplayWeather.currentDay.temp);
+        $('#current-humidity').text(testDisplayWeather.currentDay.humidity);
+        $('#current-wind').text(testDisplayWeather.currentDay.windSpeed);
+        $('#current-uv').text(testDisplayWeather.currentDay.uvIndex);
+    
+        testDisplayWeather.followingDays.forEach((day,index) => {
+            let divEl = $(`div[data-day="${index}"]`);
+            let followingIconUrl = `http://openweathermap.org/img/wn/${ day.icon }@2x.png`
+    
+            let h5El = $('<h5>').text(day.date);
+            let followingDaysIconEl = $('<img>').attr({
+                src: followingIconUrl,
+                alt: 'weather icon'
+            });
+            let paragraphTempEl = $('<p>').text(`Temp: ${day.temp}`);
+            let paragraphHumidityEl = $('<p>').text(`Hum: ${day.humidity}`);
+    
+            divEl.empty();
+            divEl.append(h5El,followingDaysIconEl,paragraphTempEl,paragraphHumidityEl)
+            
+            
+            
+            console.log(day);
+            console.log(index);
+            // console.log(testEl);
+        })
+        
+        
+        
+    }
 
 addCities();
 
@@ -265,67 +316,18 @@ $('ul').on('click', 'li', addActiveCity)
 $('#searchCity').on('click', creatCityItem)
 
 
-$('#testMe').on('click',function() {
-
-// function to handle updating the dom with the currently active city storeage in the dispay weather local storage object
-
-    
+$('#testMe').on('click',updateWeather);
 
 
+if (localStorage.getItem('citiesArray') === null ) {
+    localStorage.setItem('citiesArray', '[]');
+}
 
-    let testDisplayWeather = localStorage.getItem('displayWeather');
-    testDisplayWeather = JSON.parse(testDisplayWeather);
-    console.log(testDisplayWeather);
-
-    let date = testDisplayWeather.currentDay.date
-    let currentDayIcon = testDisplayWeather.currentDay.icon;
-    console.log(currentDayIcon);
-
-    let iconUrl = `http://openweathermap.org/img/wn/${ currentDayIcon }@2x.png`
-    
-    let iconImgEl = $('<img>').attr('src', iconUrl).addClass('d-inline');
-
-
-
-
-
-
-
-
-    $('#current-city').text(testDisplayWeather.currentDay.name + ' ' + date);
-    $('#current-city-icon').attr('src', iconUrl);
-    $('#current-temp').text(testDisplayWeather.currentDay.temp);
-    $('#current-humidity').text(testDisplayWeather.currentDay.humidity);
-    $('#current-wind').text(testDisplayWeather.currentDay.windSpeed);
-    $('#current-uv').text(testDisplayWeather.currentDay.uvIndex);
-
-    testDisplayWeather.followingDays.forEach((day,index) => {
-        let divEl = $(`div[data-day="${index}"]`);
-        let followingIconUrl = `http://openweathermap.org/img/wn/${ day.icon }@2x.png`
-
-        let h5El = $('<h5>').text(day.date);
-        let followingDaysIconEl = $('<img>').attr({
-            src: followingIconUrl,
-            alt: 'weather icon'
-        });
-        let paragraphTempEl = $('<p>').text(`Temp: ${day.temp}`);
-        let paragraphHumidityEl = $('<p>').text(`Humidity: ${day.humidity}`);
-
-        divEl.empty();
-        divEl.append(h5El,followingDaysIconEl,paragraphTempEl,paragraphHumidityEl)
-        
-        
-        
-        console.log(day);
-        console.log(index);
-        // console.log(testEl);
-    })
-    
-    
-    
-})
-
-
+if (localStorage.getItem('displayWeather') === null ) {
+    localStorage.setItem('displayWeather', "{}");
+} else {
+    updateWeather();
+}
 
 
 
