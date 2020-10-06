@@ -258,7 +258,7 @@ const getWeather = city => {
     })
 
 }
-const updateWeather = () => {
+    const updateWeather = () => {
 
     // function to handle updating the dom with the currently active city storeage in the dispay weather local storage object
     
@@ -310,24 +310,29 @@ const updateWeather = () => {
         
     }
 
-addCities();
+    if (localStorage.getItem('citiesArray') === null ) {
+        localStorage.setItem('citiesArray', '[]');
+    }
 
-$('ul').on('click', 'li', addActiveCity)
-$('#searchCity').on('click', creatCityItem)
+    if (localStorage.getItem('displayWeather') === null ) {
+        localStorage.setItem('displayWeather', "{}");
+    } else {
+        updateWeather();
+    }
 
 
-$('#testMe').on('click',updateWeather);
+    $('ul').on('click', 'li', addActiveCity)
+    $('#searchCity').on('click', creatCityItem)
 
 
-if (localStorage.getItem('citiesArray') === null ) {
-    localStorage.setItem('citiesArray', '[]');
-}
+    $('#testMe').on('click',updateWeather);
 
-if (localStorage.getItem('displayWeather') === null ) {
-    localStorage.setItem('displayWeather', "{}");
-} else {
-    updateWeather();
-}
+
+
+
+    
+    addCities();
+
 
 
 
