@@ -274,7 +274,7 @@ const getWeather = city => {
         let currentDayIcon = testDisplayWeather.currentDay.icon;
         console.log(currentDayIcon);
     
-        let iconUrl = `http://openweathermap.org/img/wn/${ currentDayIcon }@2x.png`
+        let iconUrl = `https://openweathermap.org/img/wn/${ currentDayIcon }@2x.png`
         
         
         $('#current-city').text(testDisplayWeather.currentDay.name + ' ' + date);
@@ -286,7 +286,7 @@ const getWeather = city => {
     
         testDisplayWeather.followingDays.forEach((day,index) => {
             let divEl = $(`div[data-day="${index}"]`);
-            let followingIconUrl = `http://openweathermap.org/img/wn/${ day.icon }@2x.png`
+            let followingIconUrl = `https://openweathermap.org/img/wn/${ day.icon }@2x.png`
     
             let h5El = $('<h5>').text(day.date);
             let followingDaysIconEl = $('<img>').attr({
