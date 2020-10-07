@@ -16,6 +16,13 @@ div[data-day] {
 }
 
 
+.bg-orange {
+    background-color: #ff7525;
+}
+.bg-extreme {
+    background-color: purple;
+}
+
 @media (max-width: 767.98px) { 
     #testMe {
         margin: 10px auto;
@@ -36,7 +43,29 @@ div[data-day] {
         width: 50px;
         height: auto;
     }
+    div[data-day] p {
+        margin-bottom: 5px;
+    }
     #current-city-icon {
         display: block;
     }
+
+    
 }
+@media (max-width: 552.98px) { 
+    div[data-day] {
+        text-align: center;
+        margin-left: 3px!important;
+        margin-right: 3px!important;
+    }
+    div[data-day] h5 {
+        font-size: .7rem;
+        margin-top: 10px;
+        /* font-weight: 600; */
+    }
+    div[data-day] p {
+        font-size: .75rem;
+
+    }
+    
+ }

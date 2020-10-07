@@ -181,13 +181,13 @@ const getWeather = city => {
                     //Math.round(((oneCallresponse.daily[1].temp.day-273.15)*1.8 )+32),
             newCityData = {
                 currentDay: {
-                name: cityName,
-                date: moment().format('L'),
-                icon: oneCallresponse.current.weather[0].icon,
-                temp: Math.round(((oneCallresponse.current.temp-273.15)*1.8 )+32),
-                humidity: oneCallresponse.current.humidity,
-                windSpeed: oneCallresponse.current.wind_speed,
-                uvIndex: oneCallresponse.current.uvi
+                    name: cityName,
+                    date: moment().format('L'),
+                    icon: oneCallresponse.current.weather[0].icon,
+                    temp: Math.round(((oneCallresponse.current.temp-273.15)*1.8 )+32),
+                    humidity: oneCallresponse.current.humidity,
+                    windSpeed: oneCallresponse.current.wind_speed,
+                    uvIndex: oneCallresponse.current.uvi
 
                 },
                 followingDays: [
@@ -253,6 +253,14 @@ const getWeather = city => {
 
 
             updateWeather();
+           
+        }).then(() => {
+
+            // Updates uvi elements background color
+            let uviToCheck = $('#current-uv').text()
+            uviToCheck = parseFloat(uviToCheck)
+            updateUVI(uviToCheck)
+            
         })
         //------------------------------------------------------------------------------------------------
     })
@@ -279,9 +287,9 @@ const getWeather = city => {
         
         $('#current-city').text(testDisplayWeather.currentDay.name + ' ' + date);
         $('#current-city-icon').attr('src', iconUrl);
-        $('#current-temp').text(testDisplayWeather.currentDay.temp);
-        $('#current-humidity').text(testDisplayWeather.currentDay.humidity);
-        $('#current-wind').text(testDisplayWeather.currentDay.windSpeed);
+        $('#current-temp').html(testDisplayWeather.currentDay.temp + '&#8457;');
+        $('#current-humidity').text(testDisplayWeather.currentDay.humidity + '%');
+        $('#current-wind').text(testDisplayWeather.currentDay.windSpeed + 'mph');
         $('#current-uv').text(testDisplayWeather.currentDay.uvIndex);
     
         testDisplayWeather.followingDays.forEach((day,index) => {
@@ -293,8 +301,8 @@ const getWeather = city => {
                 src: followingIconUrl,
                 alt: 'weather icon'
             });
-            let paragraphTempEl = $('<p>').text(`Temp: ${day.temp}`);
-            let paragraphHumidityEl = $('<p>').text(`Hum: ${day.humidity}`);
+            let paragraphTempEl = $('<p>').html(`Temp: ${day.temp}&#8457;`);
+            let paragraphHumidityEl = $('<p>').text(`Hum: ${day.humidity}%`);
     
             divEl.empty();
             divEl.append(h5El,followingDaysIconEl,paragraphTempEl,paragraphHumidityEl)
@@ -308,6 +316,25 @@ const getWeather = city => {
         
         
         
+    }
+
+    const updateUVI = uvi => {
+        let uviEl = $('#current-uv')
+        let bgColor;
+        if (uvi <= 2) {
+            bgColor = 'bg-success text-white p-1 rounded'
+        }else if (uvi <= 5) {
+            bgColor = 'bg-warning text-dark p-1 rounded'
+        } else if (uvi < 8 && uvi > 5) {
+            bgColor = 'bg-orange text-dark p-1 rounded'
+        } else if ( uvi <= 10 && uvi > 8) {
+            bgColor = 'bg-danger text-white p-1 rounded';
+        } else if ( uvi > 10) {
+            bgColor = 'bg-extreme text-white p-1 rounded'
+        }
+
+
+        uviEl.addClass(bgColor);
     }
 
     if (localStorage.getItem('citiesArray') === null ) {
@@ -325,7 +352,9 @@ const getWeather = city => {
     $('#searchCity').on('click', creatCityItem)
 
 
-    $('#testMe').on('click',updateWeather);
+    $('#testMe').on('click',function() {
+
+    });
 
 
 
