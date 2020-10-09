@@ -7,12 +7,12 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
     <link rel="stylesheet" href="Assests\style.css">
 </head>
-<body class=".bg-white">
+<body class="bg-light">
     <div class="container-fluid p-0">
         <div class="bg-dark text-white w-100 text-center p-2">
             <h1>Weather Forecast</h1>
         </div>
-        <section class="row p-3">            
+        <section class="row p-3 my-2">            
             <div class="col-xl-4">
                 <div class="search-container my-3">
                     <form>
@@ -24,12 +24,12 @@
                 </div>
                 <div class="city-container m">
                     <ul class="list-group">
-                      </ul>
-                      <button id="testMe" class="btn btn-secondary">Show Cities</button>
+                    </ul>
+                    <button id="changeTemp" class="btn btn-secondary">Convert to C</button>
                 </div>
             </div>
             <div class="col-xl-8">
-                <div class="current-weather bg-light rounded p-2 border border-secondary">
+                <div class="current-weather  bg-white rounded p-2 border border-secondary">
                     <div class="city">
                         <h2 id="current-city" class="d-inline">Your City</h2>
                         <img id="current-city-icon" src="#" alt="weather icon">
@@ -44,10 +44,10 @@
                         <h2 id="forecast">5 Day Forecast</h2>
                     </div>
                     <div class="col-2 col-sm-offset-1 rounded m-2" data-day="0">weather day 0</div>
-                    <div class="col-2 rounded m-2" data-day="1">Weather day 1</div>
-                    <div class="col-2 rounded m-2" data-day="2">Weather day 2</div>
-                    <div class="col-2 rounded m-2" data-day="3">Weather day 3</div>
-                    <div class="col-2 rounded m-2" data-day="3">Weather day 4</div>
+                    <div class="col-2 rounded m-2" data-day="1" >Weather day 1</div>
+                    <div class="col-2 rounded m-2" data-day="2" >Weather day 2</div>
+                    <div class="col-2 rounded m-2" data-day="3" >Weather day 3</div>
+                    <div class="col-2 rounded m-2" data-day="3" >Weather day 4</div>
 
                 </div>
             </div>

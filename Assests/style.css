@@ -11,8 +11,11 @@ div[data-day] {
     background-color: rgb(44, 143, 255);
 }
 
-#testMe {
-    display: none;
+#changeTemp {
+    margin: 10px auto;
+    display: block;
+    /* margin-left: auto;
+    margin-right: auto; */
 }
 
 
@@ -24,12 +27,10 @@ div[data-day] {
 }
 
 @media (max-width: 767.98px) { 
-    #testMe {
-        margin: 10px auto;
-        display: block;
-        /* margin-left: auto;
-        margin-right: auto; */
+    section {
+        padding-left: 1rem;
     }
+
     div[data-day] {
         padding-left: 5px;
         padding-right: 5px;
