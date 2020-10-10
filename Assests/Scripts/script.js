@@ -2,6 +2,8 @@ $(document).ready(function() {
   
     // Adding all cities stored on the local storage cities araray 
     const addCities = () => {
+        $('ul').empty();
+        
 
         let listOfCities = localStorage.getItem('citiesArray');
         listOfCities = JSON.parse(listOfCities);
@@ -14,7 +16,7 @@ $(document).ready(function() {
         })
     }
 
-
+    //----------------------------LOGIC FOR CONVERTING TEMPS-----------------------------------
     // Change temp top from k to f 
     const convertFromKelvin = temp => {
        return Math.round(((temp-273.15)*1.8 )+32);
@@ -43,6 +45,7 @@ $(document).ready(function() {
         // check value
         return number;
     }
+    //-------------------------------------------------------------------------------
 
     ///////////////////////////////////////////////////////////////////////////////
     //-------------Function to convert temp to celcius vs fahrenheit and vise versa 
@@ -51,7 +54,6 @@ $(document).ready(function() {
         // Change text of button element
         if (event.target.innerText === 'Convert to C') {
             event.target.innerText = 'Convert to F';
-            console.log('it works');
         } else if (event.target.innerText = 'Convert to F') {
             event.target.innerText = 'Convert to C'
         }
@@ -133,21 +135,17 @@ $(document).ready(function() {
         cityCaped = cityCaped.join(' ');
         return cityCaped;
     }
-    // capitalizeCity('lake stevens')
 
     ///////////////////////////////////////////////////////////////////////////////
     // ----Adding new citys
     const creatCityItem = (event) => {
         event.preventDefault();
 
-
-        // creating vars for the element to create and its value
-        let newCityIemEl = $('<li>');
+        // Getting value of the city inpu
         let newCityText = $('#city-input').val();
-        ////////////////////////////////////////------------make capitalized slice split toUppercase...
         newCityText = capitalizeCity(newCityText)
 
-        // storing array of cities local storage array
+        // storing array of cities from the local storage array
         let testCity = localStorage.getItem('citiesArray')
         testCity = JSON.parse( testCity );
         
@@ -160,13 +158,9 @@ $(document).ready(function() {
                 alert('please select a new city this city is already active');
                 testCase = false;
             } 
-
         }
         // if test case remains true create a new city element and get the weather for that city
         if (testCase) {
-            newCityIemEl.addClass('list-group-item')
-            .text(newCityText);
-            $('.list-group').append(newCityIemEl);
             getWeather(newCityText);
         }
         
@@ -288,6 +282,8 @@ $(document).ready(function() {
                 let uviToCheck = $('#current-uv').text()
                 uviToCheck = parseFloat(uviToCheck)
                 updateUVI(uviToCheck)
+                addCities()
+                $('.weather-conatiner').css('display', 'block')
                 
                 
             })
@@ -334,7 +330,7 @@ $(document).ready(function() {
     }
 
     const updateUVI = uvi => {
-        let uviEl = $('#current-uv')
+        let uviEl = $('#current-uv');
         let bgColor;
         if (uvi <= 2) {
             bgColor = 'bg-success text-white p-1 rounded'
@@ -348,16 +344,21 @@ $(document).ready(function() {
             bgColor = 'bg-extreme text-white p-1 rounded'
         }
 
-
+        uviEl.removeClass()
         uviEl.addClass(bgColor);
     }
 
     if (localStorage.getItem('citiesArray') === null ) {
         localStorage.setItem('citiesArray', '[]');
+        // $('.weather-conatiner').css('display', 'none')
     } else {
         let cityArray = JSON.parse(localStorage.getItem('citiesArray'))
         let city = cityArray.slice(-1)
-        getWeather(city);
+        console.log(city.length);
+        if (city.length > 0) {
+            getWeather(city);
+        }
+        
 
     }
 
