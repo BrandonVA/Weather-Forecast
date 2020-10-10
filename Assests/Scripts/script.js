@@ -1,11 +1,5 @@
 $(document).ready(function() {
-    console.log('jquery!!!')
-
-
-
-
-
-
+  
     // Adding all cities stored on the local storage cities araray 
     const addCities = () => {
 
@@ -47,41 +41,41 @@ $(document).ready(function() {
         // join the numbers into on sring than convert to an interger
         number = parseInt( number.join('') )
         // check value
-        console.log(number);
         return number;
     }
 
     ///////////////////////////////////////////////////////////////////////////////
     //-------------Function to convert temp to celcius vs fahrenheit and vise versa 
     const convertTemp = (event) => {
-        
+
         // Change text of button element
         if (event.target.innerText === 'Convert to C') {
-            event.target.innerText = 'Convert to F'
-        } else {
+            event.target.innerText = 'Convert to F';
+            console.log('it works');
+        } else if (event.target.innerText = 'Convert to F') {
             event.target.innerText = 'Convert to C'
         }
 
         // get required data to handel changing the temp
-        let typeofTemp = $('span[data-temp]').data('temp');
+        let typeofTemp = $('p #current-temp').data('temp');
         let currentDayTempText = $('span[data-temp]').html();
         let currentDayTempToConvert = testStringForNumber(currentDayTempText);
         let currentTempConverted = '';
 
         // check value of the data attr and change if releative to value 
         if (typeofTemp === 'f') {
-            $('span[data-temp]').data('temp', 'c')
+            $('#current-temp').data('temp', "c");
             currentTempConverted = convertTempToC(currentDayTempToConvert);
             $('span[data-temp]').html(currentTempConverted + '&#8451;' );
         } else {
-            $('span[data-temp]').data('temp', 'f')
+            $('#current-temp').data('temp', "f");
             currentTempConverted = convertTempToF(currentDayTempToConvert);
             $('span[data-temp]').html(currentTempConverted + '&#8457;');
         }
 
         // same as above just loops through each item and changing the value.
         $('div p[data-temp]').each(function(element) {
-            console.log(element +': ' + $(this).data('temp'));
+    
             let currentTempUnits = $(this).data('temp');
             let tempText = $(this).html();
             let tempToConvert = testStringForNumber(tempText);
@@ -100,7 +94,7 @@ $(document).ready(function() {
 
     }
 
-    $('#changeTemp').on('click', convertTemp)
+    
     
 
 
@@ -108,12 +102,8 @@ $(document).ready(function() {
     //------Getting data from list items
     const addActiveCity = (event) => {
         event.preventDefault();
-
-
-        let testThis = event.target.innerText
-        console.log(testThis);
-        ////////////////////////////////////////------------make capitalized slice split toUppercase...
-        getWeather(testThis);
+        let selectedCity = event.target.innerText
+        getWeather(selectedCity);
 
         // getting value of the array of cities stored
         let testLocalArray = localStorage.getItem('citiesArray');
@@ -122,35 +112,14 @@ $(document).ready(function() {
         // setting the display weather local object to the clicked on city.
         let weatherToDisply = localStorage.getItem('displayWeather');
         weatherToDisply = JSON.parse(weatherToDisply);
-
-
-        // looping through the array and checking the first index is the same as the stored city
-        testLocalArray.forEach((item) => {
-
-            // if true setting the display weather local object to that item
-            if (testThis === item[0]) {
-                alert('this will work')
-                weatherToDisply = item;
-            }
-        })
-
         // Updating the local storage object with the stringified value of the cities object
         weatherToDisply = JSON.stringify(weatherToDisply);
         localStorage.setItem('displayWeather', weatherToDisply);
 
-
-        // console.log(testLocalArray);
-
-        
-
-
     }
 
 
-
-
-
-
+    // Function to return all words in a sentence with the fist letter capitalized
     const capitalizeCity = city => {
         
         city = city.trim().split(' ');
@@ -182,24 +151,15 @@ $(document).ready(function() {
         let testCity = localStorage.getItem('citiesArray')
         testCity = JSON.parse( testCity );
         
-
-
         // creating a test var 
         let testCase = true;
 
         //  if the city you inputed already exists dont add it to the list
-
-
         for (let i = 0; i < testCity.length; i++) {
-            console.log(testCity[i]);
             if (newCityText === testCity[i]) {
                 alert('please select a new city this city is already active');
                 testCase = false;
-            } else {
-                console.log('this should do the trick');
-
-            }
-
+            } 
 
         }
         // if test case remains true create a new city element and get the weather for that city
@@ -215,9 +175,7 @@ $(document).ready(function() {
     ///////////////////////////////////////////////////////////////////////////
     //------------Function to handle getting all the cities data
     const getWeather = city => {
-        console.log(city);
-
-
+       
         // creating vars to store all the data needed for an api call
         let apiCity = `q=${city}`
         const url = 'https://api.openweathermap.org/data/2.5/forecast?' 
@@ -235,7 +193,7 @@ $(document).ready(function() {
             url: endpoint,
             method: 'GET'
         }).then(function(response){
-            console.log(response);
+
             cityName = response.city.name
 
             // storing lat and long for uv index call
@@ -245,7 +203,6 @@ $(document).ready(function() {
         })
         // when the ajax call is complete 
         .then( () => {
-            console.log(cityLat, cityLon);
             //////////////////////////////////////////////////////////////////////////////////////////////////////
             let exclued = 'minutely,hourly,alerts'
             let secondApi = 'd8730e114dc8b472804de4c9ab0ed1da'
@@ -255,12 +212,8 @@ $(document).ready(function() {
                 url: oneCallAPI,
                 method: 'GET'
             }).then(oneCallresponse => {
-                console.log(oneCallresponse);
-
-                        // pushing the new citys weather into the newcity data value
-
-
-                        //Math.round(((oneCallresponse.daily[1].temp.day-273.15)*1.8 )+32),
+                
+                // Setting of newCityData to the values of the object i wamt to use 
                 newCityData = {
                     currentDay: {
                         name: cityName,
@@ -306,8 +259,6 @@ $(document).ready(function() {
                         }
                     ]
                 }
-
-                console.log('----------new obj------------',newCityData);
             }).then(()=> {
                 // setting the display weather local object to the clicked on city.
                 let currentWeatherObj = localStorage.getItem('displayWeather');
@@ -315,10 +266,8 @@ $(document).ready(function() {
                 currentWeatherObj = newCityData;
                 localStorage.setItem('displayWeather', JSON.stringify(currentWeatherObj))
 
-                console.log(cityName);
 
                 let old_listOfCities = JSON.parse(localStorage.getItem('citiesArray'))
-
                 let checkCity = true;
 
                 old_listOfCities.forEach(index => {
@@ -331,9 +280,6 @@ $(document).ready(function() {
                 }
 
                 localStorage.setItem('citiesArray', JSON.stringify(old_listOfCities) )
-                
-
-
                 updateWeather();
             
             }).then(() => {
@@ -343,26 +289,21 @@ $(document).ready(function() {
                 uviToCheck = parseFloat(uviToCheck)
                 updateUVI(uviToCheck)
                 
+                
             })
             //------------------------------------------------------------------------------------------------
         })
-
+        $('#changeTemp').text('Convert to C')
+        $('#current-temp').data('temp', "f");
     }
     const updateWeather = () => {
 
-    // function to handle updating the dom with the currently active city storeage in the dispay weather local storage object
-    
-        
-    
-    
-    
+        // function to handle updating the dom with the currently active city storeage in the dispay weather local storage object
         let testDisplayWeather = localStorage.getItem('displayWeather');
         testDisplayWeather = JSON.parse(testDisplayWeather);
-        console.log(testDisplayWeather);
     
         let date = testDisplayWeather.currentDay.date
         let currentDayIcon = testDisplayWeather.currentDay.icon;
-        console.log(currentDayIcon);
     
         let iconUrl = `https://openweathermap.org/img/wn/${ currentDayIcon }@2x.png`
         
@@ -388,16 +329,8 @@ $(document).ready(function() {
     
             divEl.empty();
             divEl.append(h5El,followingDaysIconEl,paragraphTempEl,paragraphHumidityEl)
-            
-            
-            
-            console.log(day);
-            console.log(index);
-            // console.log(testEl);
         })
-        
-        
-        
+        //                -----------------------------------------------------------   $('#changeTemp').text('Convert to C').data('temp', 'f')
     }
 
     const updateUVI = uvi => {
@@ -421,35 +354,30 @@ $(document).ready(function() {
 
     if (localStorage.getItem('citiesArray') === null ) {
         localStorage.setItem('citiesArray', '[]');
+    } else {
+        let cityArray = JSON.parse(localStorage.getItem('citiesArray'))
+        let city = cityArray.slice(-1)
+        getWeather(city);
+
     }
 
     if (localStorage.getItem('displayWeather') === null ) {
         localStorage.setItem('displayWeather', "{}");
-    } else {
-        let weatherObj = localStorage.getItem('displayWeather')
-        weatherObj = JSON.parse(weatherObj)
-        let city = weatherObj.currentDay.name
-        getWeather(city);
     }
+    //-------------- change back after graded so 
+    // else {
+    //     let weatherObj = localStorage.getItem('displayWeather')
+    //     weatherObj = JSON.parse(weatherObj)
+    //     let city = weatherObj.currentDay.name
+    //     getWeather(city);
+    // }
 
 
+    // Function calls on events
     $('ul').on('click', 'li', addActiveCity)
     $('#searchCity').on('click', creatCityItem)
-
-
-    $('#testMe').on('click',function() {
-
-    });
-
-
-
-
-    
     addCities();
-    //////////////////////////////////  ---------!! add way to change temp from c to f vise versa 
-
- 
-    testStringForNumber('hello123')
+    $('#changeTemp').on('click', convertTemp)
 
 
 
