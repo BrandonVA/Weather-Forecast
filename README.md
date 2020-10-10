@@ -1,6 +1,6 @@
 # Weather-Forecast
 
-[Live Site](https://brandonva.github.io/Password-Generator/)<br>
+[Live Site](https://brandonva.github.io/Weather-Forecast/)<br>
 [Project Page](https://github.com/BrandonVA/Weather-Forecast)
 
 ## Project Image
