@@ -215,7 +215,7 @@ $(document).ready(function() {
                         icon: oneCallresponse.current.weather[0].icon,
                         temp: convertFromKelvin(oneCallresponse.current.temp) ,
                         humidity: oneCallresponse.current.humidity,
-                        windSpeed: oneCallresponse.current.wind_speed,
+                        windSpeed: Math.round( (oneCallresponse.current.wind_speed * 2.237) * 10 ) / 10,
                         uvIndex: oneCallresponse.current.uvi
 
                     },
@@ -308,7 +308,7 @@ $(document).ready(function() {
         $('#current-city-icon').attr('src', iconUrl);
         $('#current-temp').attr('data-temp','f').html(testDisplayWeather.currentDay.temp + '&#8457;'); 
         $('#current-humidity').text(testDisplayWeather.currentDay.humidity + '%');
-        $('#current-wind').text(testDisplayWeather.currentDay.windSpeed + 'mph');
+        $('#current-wind').text(testDisplayWeather.currentDay.windSpeed + ' mph');
         $('#current-uv').text(testDisplayWeather.currentDay.uvIndex);
     
         testDisplayWeather.followingDays.forEach((day,index) => {
